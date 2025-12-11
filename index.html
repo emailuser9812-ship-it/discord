@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WaterSMP</title>
+  <style>
+    :root{
+      --bg:#0b0b0b;
+      --red:#ff2b2b;
+      --white:#ffffff;
+      --muted:#bdbdbd;
+      --card:#121212;
+      --glow: 0 6px 30px rgba(255,43,43,0.12);
+      --glass: rgba(255,255,255,0.03);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+      background:linear-gradient(180deg,#070707 0%, #0d0d0d 100%);
+      color:var(--white);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+    }
+
+    .container{
+      width:100%;
+      max-width:980px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:18px;
+      padding:28px;
+      box-shadow:var(--glow);
+      border:1px solid rgba(255,255,255,0.04);
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:20px;
+      align-items:start;
+    }
+
+    /* Left column - big card */
+    .hero{
+      background:linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,43,43,0.02));
+      padding:22px;
+      border-radius:12px;
+      min-height:320px;
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+    .logo{
+      width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--red),#b30000);
+      display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:var(--white);
+      box-shadow:0 8px 30px rgba(179,0,0,0.18);
+      border:1px solid rgba(255,255,255,0.06);
+    }
+    h1{margin:14px 0 6px 0;font-size:24px;letter-spacing:0.2px}
+    p.lead{color:var(--muted);margin:0 0 18px 0}
+
+    .buttons{display:flex;gap:12px;margin-top:18px}
+    .btn{
+      display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:10px;border:0;cursor:pointer;font-weight:700;font-size:14px;
+      text-decoration:none;color:var(--white);
+      transition:transform .14s ease, box-shadow .14s ease;
+      box-shadow:0 6px 18px rgba(0,0,0,0.5);
+      user-select:none;
+    }
+    .btn:active{transform:translateY(1px)}
+
+    .btn-join{background:linear-gradient(90deg,var(--red),#ff6b6b);padding:14px 18px}
+    .btn-join .dot{width:10px;height:10px;border-radius:999px;background:#fff;opacity:.12}
+
+    .btn-rules{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:12px 14px}
+
+    .right{
+      position:relative;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+      border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.03);
+    }
+
+    .support-times{
+      margin-top:8px;font-family:monospace;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));padding:12px;border-radius:8px;border:1px dashed rgba(255,255,255,0.03);
+      color:var(--white);
+      white-space:pre-line;
+    }
+
+    .small{font-size:13px;color:var(--muted)}
+
+    /* Modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:60}
+    .modal{width:min(860px,96%);max-height:86vh;overflow:auto;background:linear-gradient(180deg,#0c0c0c,#0b0b0b);padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.04)}
+    .modal h2{margin:0 0 8px 0}
+    .close{margin-left:auto;background:transparent;border:0;color:var(--muted);cursor:pointer;font-weight:700}
+
+    /* cool accents */
+    .accent-line{height:6px;background:linear-gradient(90deg,var(--red),#ff6b6b);border-radius:4px;margin:8px 0 18px 0}
+
+    /* footer */
+    .credits{margin-top:16px;color:var(--muted);font-size:13px}
+
+    /* responsive */
+    @media(max-width:880px){
+      .container{grid-template-columns:1fr;}
+      .right{order:-1}
+    }
+
+    /* small animations */
+    .logo, .btn-join{transition:transform .25s cubic-bezier(.2,.9,.2,1)}
+    .logo:hover{transform:translateY(-4px) rotate(-2deg)}
+    .btn-join:hover{transform:translateY(-3px)}
+
+    /* ticket rules list */
+    .rules-list{margin:12px 0;padding-left:18px}
+    .copy-btn{background:transparent;border:1px dashed rgba(255,255,255,0.06);padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:700}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <div class="brand">
+        <div class="logo">WS</div>
+        <div>
+          <h1>WaterSMP</h1>
+          <p class="lead">GUI</p>
+        </div>
+      </div>
+
+      <div class="accent-line" aria-hidden="true"></div>
+
+      <div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;">
+        <a class="btn btn-join" id="joinBtn" href="#" target="_blank" rel="noopener noreferrer" title="Open Discord invite">
+          <span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:rgba(255,255,255,0.12)"></span>
+          Join Discord Server
+        </a>
+
+        <button class="btn btn-rules" id="rulesBtn">Ticket Rules</button>
+
+        <button class="btn" id="copyTimes">Copy Support Times</button>
+      </div>
+
+      <div style="margin-top:22px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+        <div class="card" style="padding:12px 14px;">
+          <div style="font-weight:800">Open Tickets</div>
+          <div class="small">We reply during support hours. Please include as much detail as possible.</div>
+        </div>
+
+        <div class="card" style="padding:12px 14px;">
+          <div style="font-weight:800">How to get faster help</div>
+          <div class="small">Include: description, screenshots, error text, steps you tried.</div>
+        </div>
+      </div>
+
+      <div style="position:absolute;right:18px;bottom:18px;color:var(--muted);font-size:12px">Support • Ready to help</div>
+    </div>
+
+    <div class="right">
+      <div class="card">
+        <h3 style="margin:0">Support Times</h3>
+        <div class="small">Below are the weekly hours — click copy to paste anywhere.</div>
+
+        <pre id="times" class="support-times">Monday
+16:00-20:00
+Tuesday
+16:00-20:00
+Wednesday
+13:01-20:00
+Thursday
+16:00-20:00
+Friday
+16:00-22:00
+Saturday
+15:00-23:00
+Sunday
+16:00-20:00</pre>
+
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="copy-btn" id="copyTimesBtn">Copy</button>
+          <button class="copy-btn" id="downloadBtn">Download .txt</button>
+        </div>
+
+        <div class="credits">Theme: <strong>Red • Black • White</strong> — Modern glassy UI</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Ticket Rules -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+        <h2 id="modalTitle">Ticket Rules</h2>
+        <button class="close" id="closeModal">✕</button>
+      </div>
+
+      <div class="small">Please follow these rules when creating a support ticket. Failure to follow rules may result in your ticket being closed or delayed.</div>
+
+      <div class="accent-line" style="margin-top:12px"></div>
+
+      <ol class="rules-list">
+        <li>Be respectful to staff — abusive language will get your ticket closed.</li>
+        <li>Include a clear title and a detailed description of the issue.</li>
+        <li>Attach screenshots or recordings if available.</li>
+        <li>Check support times before opening time-sensitive tickets.</li>
+        <li>Do not open duplicate tickets — wait for a response.</li>
+        <li>Follow instructions from staff and provide requested logs or files.</li>
+        <li>Do not share personal or payment information in tickets.</li>
+      </ol>
+
+      <h3 style="margin-top:8px">Support Times (copyable)</h3>
+      <pre id="modalTimes" class="support-times">Monday
+16:00-20:00
+Tuesday
+16:00-20:00
+Wednesday
+13:01-20:00
+Thursday
+16:00-20:00
+Friday
+16:00-22:00
+Saturday
+15:00-23:00
+Sunday
+16:00-20:00</pre>
+
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <button class="btn btn-join" id="modalCopy">Copy Times</button>
+        <a class="btn btn-rules" href="#" id="modalCloseLink">Close</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Replace with your real discord invite URL
+    const discordInvite = 'https://discord.gg/wBV8dcSwne';
+    document.getElementById('joinBtn').href = discordInvite;
+
+    // Modal logic
+    const modal = document.getElementById('modalBackdrop');
+    document.getElementById('rulesBtn').addEventListener('click', ()=>{ modal.style.display='flex'; });
+    document.getElementById('closeModal').addEventListener('click', ()=>{ modal.style.display='none'; });
+    document.getElementById('modalCloseLink').addEventListener('click', (e)=>{ e.preventDefault(); modal.style.display='none'; });
+
+    // Clicking outside modal closes it
+    modal.addEventListener('click', (e)=>{ if(e.target === modal) modal.style.display='none'; });
+
+    // Copy support times
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+        alert('Support times copied to clipboard');
+      }catch(e){
+        // fallback
+        const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); alert('Support times copied to clipboard'); }catch(err){ alert('Could not copy. Select and copy manually.'); } ta.remove();
+      }
+    }
+
+    document.getElementById('copyTimes').addEventListener('click', ()=>{ copyText(document.getElementById('times').innerText); });
+    document.getElementById('copyTimesBtn').addEventListener('click', ()=>{ copyText(document.getElementById('times').innerText); });
+    document.getElementById('modalCopy').addEventListener('click', ()=>{ copyText(document.getElementById('modalTimes').innerText); });
+
+    // Download .txt
+    document.getElementById('downloadBtn').addEventListener('click', ()=>{
+      const text = document.getElementById('times').innerText;
+      const blob = new Blob([text], {type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'support-times.txt'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    // Small keyboard shortcut: T opens Ticket Rules
+    document.addEventListener('keydown', (e)=>{
+      if(e.key.toLowerCase() === 't'){ modal.style.display = 'flex'; }
+    });
+  </script>
+</body>
+</html>
